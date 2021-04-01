@@ -1,0 +1,99 @@
+db.Employee.insert({
+    name:{
+        "firstname":"ks",
+        "middlename":"s",
+        "lastname":"vaibhav"
+    },
+    age:45,
+    salary:3000,
+    designation:"student",
+    role:["manager","team lead","tester","ui designer"]
+});
+db.Employee.insert({
+    name:{
+        "firstname":"abhmansij",
+        "middlename":"gupt",
+        "lastname":"a"
+    },
+    age:35,
+    salary:50000,
+    designation:"professor",
+    role:["team lead","software development"]
+});
+db.Employee.insert({
+    name:{
+        "firstname":"deepak",
+        "middlename":"kumar",
+        "lastname":"anand"
+    },
+    age:60,
+    salary:30000,
+    designation:"professor",
+    role:["manager","software development","tester"]
+});
+db.Employee.insert({
+    name:{
+        "firstname":"mayank",
+        "middlename":"s",
+        "lastname":"kakani"
+    },
+    age:15,
+    salary:30000,
+    designation:"student",
+    role:["manager","team lead","software development"]
+});
+db.Employee.insert({
+    name:{
+        "firstname":"aditya",
+        "middlename":"krishan",
+        "lastname":"anand"
+    },
+    age:25,
+    salary:30000,
+    designation:"professor",
+    role:["team lead","software development","ui designer"]
+});
+db.Employee.insert({
+    name:{
+        "firstname":"kaif",
+        "middlename":"s",
+        "lastname":"anand"
+    },
+    age:55,
+    salary:80000,
+    designation:"employee",
+    role:["manager","team lead","software development"]
+});
+db.Employee.insert({
+    name:{
+        "firstname":"abhishek",
+        "middlename":"sam",
+        "lastname":"anand"
+    },
+    age:40,
+    salary:100000,
+    designation:"professor",
+    role:["manager","team lead","ui designer"]
+});
+db.Employee.insert({
+    name:{
+        "firstname":"hritik",
+        "middlename":"s",
+        "lastname":"anand"
+    },
+    age:20,
+    salary:20000,
+    designation:"professor",
+    role:["ui designer","tester","software development"]
+});
+db.Employee.insert({
+    name:{
+        "firstname":"akhil",
+        "middlename":"s",
+        "lastname":"ghgosh"
+    },
+    age:70,
+    salary:10000,
+    designation:"professor",
+    role:["manager","team lead","software development"]
+});
