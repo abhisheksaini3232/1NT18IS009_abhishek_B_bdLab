@@ -1,0 +1,207 @@
+> show dbs;
+admin      0.000GB
+config     0.000GB
+institute  0.000GB
+local      0.000GB
+> use institute
+switched to db institute
+> db.staff.find().pretty();
+{
+        "_id" : "1",
+        "name" : "abhishek",
+        "department" : "human resource",
+        "salary" : 50000,
+        "age" : 25,
+        "designation" : "professor",
+        "increment" : "no",
+        "performance_status" : [
+                "good"
+        ]
+}
+{
+        "_id" : "2",
+        "name" : "alok",
+        "department" : "development team",
+        "salary" : 35000,
+        "age" : 26,
+        "designation" : "professor",
+        "increment" : "yes",
+        "performance_status" : [
+                "average"
+        ]
+}
+{
+        "_id" : "3",
+        "name" : "sheela",
+        "department" : "administration",
+        "salary" : 30000,
+        "age" : 24,
+        "designation" : "professor",
+        "increment" : "yes",
+        "performance_status" : [
+                "excellent"
+        ]
+}
+{
+        "_id" : "4",
+        "name" : "abhi",
+        "department" : "maintenance",
+        "salary" : 40000,
+        "age" : 25,
+        "designation" : "assistant professor",
+        "increment" : "yes",
+        "performance_status" : [
+                "excellent"
+        ]
+}
+{
+        "_id" : "5",
+        "name" : "shek",
+        "department" : "human resource",
+        "salary" : 50000,
+        "age" : 25,
+        "designation" : "professor",
+        "increment" : "no",
+        "performance_status" : [
+                "good"
+        ]
+}
+{
+        "_id" : "6",
+        "name" : "bhatnagar",
+        "department" : "development team",
+        "salary" : 34000,
+        "age" : 25,
+        "designation" : "professor",
+        "increment" : "no",
+        "performance_status" : [
+                "average"
+        ]
+}
+{
+        "_id" : "7",
+        "name" : "supppa",
+        "department" : "administration",
+        "salary" : 30000,
+        "age" : 25,
+        "designation" : "assistant professor",
+        "increment" : "yes",
+        "performance_status" : [
+                "excellent"
+        ]
+}
+{
+        "_id" : "8",
+        "name" : "ak",
+        "department" : "human resource",
+        "salary" : 30000,
+        "age" : 25,
+        "designation" : "assistant professor",
+        "increment" : "no",
+        "performance_status" : [
+                "good"
+        ]
+}
+{
+        "_id" : "9",
+        "name" : "sanjay",
+        "department" : "administration",
+        "salary" : 70000,
+        "age" : 45,
+        "designation" : "hod",
+        "increment" : "no",
+        "performance_status" : [
+                "not satisfactory"
+        ]
+}
+{
+        "_id" : "10",
+        "name" : "akhila",
+        "department" : "administration",
+        "salary" : 30000,
+        "age" : 22,
+        "designation" : "professor",
+        "increment" : "no",
+        "performance_status" : [
+                "not satisfactory"
+        ]
+}
+
+1. Group all the records by the department type and calculate the average sum of the salary
+from each department.
+> db.staff.aggregate([{$group:{_id: "$department",avgSalary: { $avg: "$salary"}}}]).pretty();
+{ "_id" : "development team", "avgSalary" : 34500 }
+{ "_id" : "maintenance", "avgSalary" : 40000 }
+{ "_id" : "human resource", "avgSalary" : 43333.333333333336 }
+{ "_id" : "administration", "avgSalary" : 40000 }
+
+2. Group all the records by the age, find out the average salary by the age group.
+> db.staff.aggregate([{$group:{_id: "$age",avgSalary: { $avg: "$salary"}}}]).pretty();
+{ "_id" : 25, "avgSalary" : 39000 }
+{ "_id" : 22, "avgSalary" : 30000 }
+{ "_id" : 26, "avgSalary" : 35000 }
+{ "_id" : 45, "avgSalary" : 70000 }
+{ "_id" : 24, "avgSalary" : 30000 }
+
+3. Apply the map-reduce aggregation to project the name and amount owned by each staff by
+doing multiple jobs in different department.
+> var mapF=function(){emit(this.name,this.salary);};
+> var reduceF=function(name,salary){return Array.sum(salary);};
+> db.staff.mapReduce(mapF,reduceF,{out:"salarySum"});
+{ "result" : "salarySum", "ok" : 1 }
+> db.salarySum.find().pretty();
+{ "_id" : "sanjay", "value" : 70000 }
+{ "_id" : "abhi", "value" : 40000 }
+{ "_id" : "shek", "value" : 50000 }
+{ "_id" : "supppa", "value" : 30000 }
+{ "_id" : "abhishek", "value" : 50000 }
+{ "_id" : "akhila", "value" : 30000 }
+{ "_id" : "bhatnagar", "value" : 34000 }
+{ "_id" : "alok", "value" : 35000 }
+{ "_id" : "sheela", "value" : 30000 }
+{ "_id" : "ak", "value" : 30000 }
+
+4. Match all the records having the performance status as “Excellent”, group them by their
+staff id and compute the salary for each of them.
+> db.staff.aggregate({$match:{"performance_status":{$in:["excellent"]}}},{$group:{_id:"$_id",salVal:{$sum:"$salary"}}});
+{ "_id" : "4", "salVal" : 40000 }
+{ "_id" : "3", "salVal" : 30000 }
+{ "_id" : "7", "salVal" : 30000 }
+
+
+5. Demonstrate the usage of $match, $group, aggregate pipelines. Demonstrate the usage of
+$min, $last, $first, $sum, $max query operators with the $group operator.
+> db.staff.aggregate({$match:{"performance_status":{$in:["excellent"]}}},{$group:{_id:"$age",salVal:{$sum:"$salary"}}});
+{ "_id" : 24, "salVal" : 30000 }
+{ "_id" : 25, "salVal" : 70000 }
+> db.staff.aggregate({$match:{"performance_status":{$in:["excellent"]}}},{$group:{_id:"$age",salVal:{$min:"$salary"}}});
+{ "_id" : 24, "salVal" : 30000 }
+{ "_id" : 25, "salVal" : 30000 }
+> db.staff.aggregate({$match:{"performance_status":{$in:["excellent"]}}},{$group:{_id:"$age",salVal:{$max:"$salary"}}});
+{ "_id" : 24, "salVal" : 30000 }
+{ "_id" : 25, "salVal" : 40000 }
+> db.staff.aggregate({$match:{"performance_status":{$in:["excellent"]}}},{$group:{_id:"$age",salVal:{$last:"$salary"}}});
+{ "_id" : 24, "salVal" : 30000 }
+{ "_id" : 25, "salVal" : 30000 }
+> db.staff.aggregate({$match:{"performance_status":{$in:["excellent"]}}},{$group:{_id:"$age",salVal:{$first:"$salary"}}});
+{ "_id" : 24, "salVal" : 30000 }
+{ "_id" : 25, "salVal" : 40000 }
+
+
+6. Apply the map reduce paradigm to project name and sum of salary on to a collection called
+“mapreduceout”.
+> db.staff.mapReduce(mapF,reduceF,{out:"mapreduceout"});
+{ "result" : "mapreduce", "ok" : 1 }
+> db.mapreduceout.find().pretty();
+{ "_id" : "abhishek", "value" : 50000 }
+{ "_id" : "supppa", "value" : 30000 }
+{ "_id" : "shek", "value" : 50000 }
+{ "_id" : "abhi", "value" : 40000 }
+{ "_id" : "sanjay", "value" : 70000 }
+{ "_id" : "akhila", "value" : 30000 }
+{ "_id" : "ak", "value" : 30000 }
+{ "_id" : "alok", "value" : 35000 }
+{ "_id" : "sheela", "value" : 30000 }
+{ "_id" : "bhatnagar", "value" : 34000 }
+
+
