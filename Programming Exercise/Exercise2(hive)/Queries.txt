@@ -1,0 +1,50 @@
+HiveQL Queries: 
+1. Insert 5 records using INSERT command.
+>INSERT INTO TABLE employee VALUES
+>('anurag',61326,61000,2,'yes','yes'),
+>('prince',61327,66000,5,'no','yes'),
+>('pk',61328,44000,1,'no','yes'),
+>('rajat',61329,33000,0,'no','no'),
+>('chiku',61330,28000,0,'yes','no');
+
+2. Demonstrate the Alter command for the following cases, 
+
+   a. Rename the table name to “Emp”. 
+   >ALTER TABLE employee RENAME TO emp;
+
+   b. Rename the column name “Eligible for Pay raise” to “Eligibility”.
+   >ALTER TABLE emp CHANGE eligible_for_pay_raise eligibility string;
+
+3. Count the number of Employee who are eligible for pay raise who had paid the tax. 
+>SELECT COUNT(*) FROM emp WHERE tax_paid='yes' AND eligibility='yes';
+
+4. Extract all the users ordered by the Name who had paid the tax but are not eligible for pay raise.
+>SELECT name FROM emp 
+>WHERE tax_paid='yes' AND eligibility='no'
+>ORDER BY name;
+
+5. Create separate view containing “SSN and Salary” and call the view as sal_ssn_view. 
+>CREATE VIEW sal_ssn_view AS
+>SELECT ssn,salary FROM emp;
+
+6. Display count(eligibility) grouped by the SSN. 
+>SELECT salary,COUNT(eligibility) FROM emp GROUP BY salary;   //displaying with salary
+
+7. Display the (Name, SSN) of employees whose salary is >40000 but < 48000. 
+>SELECT name,ssn FROM emp
+>WHERE salary > 40000 AND salary < 48000;
+
+
+8. Create Another table called orders with the following fields (custssn = SSN in the Employee) and perform the following joins
+a)outer
+>SELECT e.name,e.ssn,o.orderid,o.amount FROM emp e JOIN
+>orders o ON (e.ssn=o.custssn);
+
+b)left outer
+>SELECT e.name,e.ssn,o.orderid,o.amount FROM emp e LEFT OUTER JOIN
+>orders o ON (e.ssn=o.custssn);
+
+3)right outer 
+>SELECT e.name,e.ssn,o.orderid,o.amount FROM emp e RIGHT OUTER JOIN
+>orders o ON (e.ssn=o.custssn);
+
