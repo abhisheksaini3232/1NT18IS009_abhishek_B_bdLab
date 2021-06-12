@@ -27,7 +27,7 @@ HiveQL Queries:
 >CREATE VIEW sal_ssn_view AS
 >SELECT ssn,salary FROM emp;
 
-6. Display count(eligibility) grouped by the SSN. 
+6. Display salary,count(eligibility) grouped by the salary. 
 >SELECT salary,COUNT(eligibility) FROM emp GROUP BY salary;   //displaying with salary
 
 7. Display the (Name, SSN) of employees whose salary is >40000 but < 48000. 
